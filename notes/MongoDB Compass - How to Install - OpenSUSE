@@ -1,0 +1,21 @@
+Use these steps if you want to install MongoDB Compass on OpenSUSE but don't see that distribution listed:
+
+1. Add the Databases repository (may or may not be required?... - I did.) SUSE does not have this out of the box since not everyone uses it:
+
+sudo zypper up
+sudo zypper addrepo https://download.opensuse.org/repositories/server:database/#YOUR_VERSION#/server:database.repo
+sudo zypper refresh
+
+2. Add gnome-keyring dependency (may be listed as optional - in fact, it is required):
+
+sudo zypper in gnome-keyring lsb-core-noarch gconf2
+
+3. Download the .rpm (cloud.mongodb.com) and install:
+
+sudo rpm -ivh --nodeps mongodb-compass-1.21.2.x86_64.rpm
+
+*The --nodeps option is needed I guess because of the dependency name mismatch between Redhat (GConf2) and SUSE (gconf2) - Thanks to the peeps on this thread for figuring that out => https://www.reddit.com/r/mongodb/comments/e873bk/no_mongodb_compass_for_opensuse/
+
+4. Start it up:
+
+mongdb-compass
