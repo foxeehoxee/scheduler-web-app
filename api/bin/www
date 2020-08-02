@@ -12,7 +12,12 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+/**
+ * Both express and react apps use port 3000 in development mode,
+ * so change this to 8083
+ * var port = normalizePort(process.env.PORT || '3000');
+ */
+var port = normalizePort(process.env.PORT || '8083');
 app.set('port', port);
 
 /**
