@@ -1,6 +1,5 @@
-// TODO: Clean up code (standard spacing, etc.)
+// TODO: Clean up / "Beautify" code (standard spacing, etc.)
 
-// TODO: Verify next two lines are good now... (app runs, should be good)
 const Model = require('../models/index');
 const {Appointment, Slot} = Model;
 
@@ -29,20 +28,26 @@ const appointmentController = {
     });
 
     // TODO: Read this in from .gitIgnored config file
+    // Replace here after committing to source control.
+
+    /*
     const nexmo = new Nexmo({
       apiKey: "YOUR_API_KEY",
       apiSecret: "YOUR_API_SECRET"
     });
-
+    */
+    
+    // TODO: Original msg value. Safe to remove at some point.
+    /*
     let msg =
       requestBody.name +
       " " +
       "this message is to confirm your appointment at" +
       " " +
       requestBody.appointment;
+    */
 
-    // and saves the record to
-    // the data base
+    // Saves the record to the database
     newappointment.save((err, saved) => {
       // Returns the saved appointment
       // after a successful save
@@ -50,9 +55,30 @@ const appointmentController = {
         .populate("slots")
         .exec((err, appointment) => res.json(appointment));
 
+      /*
+      // Update these with the vonage / nexmo number and your whitelisted recipient number.
       const from = VIRTUAL_NUMBER;
       const to = RECIPIENT_NUMBER;
+      */
+      
+      // TODO: Read this in from .gitIgnored config file
+      // Replace here after committing to source control.
 
+
+      // TODO: Updated msg value, for now. Pretty this up / finalize at some point.
+      let msg = 
+      requestBody.name +
+      ", " +
+      "this message is to confirm your appointment on" +
+      " " +
+      requestBody.slot_date +
+      " " +
+      "at " +
+      requestBody.slot_time
+      
+      // TODO: Activate this for reals when development is complete and app is live.
+      // Uncomment this next block to hit the SMS api (works) and send text messages. Commenting out for now during development.
+      /*
       nexmo.message.sendSms(from, to, msg, (err, responseData) => {
         if (err) {
           console.log(err);
@@ -60,8 +86,21 @@ const appointmentController = {
           console.dir(responseData);
         }
       });
+      */
     });
   }
 };
 
 module.exports = appointmentController;
+
+/*
+ * Sample JSON *
+ * 
+{
+    "name": "Mark",
+    "email": "mark2012@aol.com",
+    "phone": 13109510356,
+    "slot_time": "1:00 PM",
+    "slot_date": "2020-09-01"
+}
+*/

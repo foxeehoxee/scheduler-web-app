@@ -1,6 +1,5 @@
-// The express app will enable the appointment scheduler app to interact with the MongoDB database
-
-// First, edit the app.js file to add our mongoose connection [ ]
+// The express app will enable the appointment scheduler app to interact with the MongoDB database.
+// First, edit the app.js file to add our mongoose connection.
 
 var createError = require('http-errors');
 var express = require('express');
@@ -10,7 +9,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 // TODO: Add favicon
 //var favicon = require('serve-favicon');
-// TODO: Review these
+// TODO: Review mongoose and body-parser
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
@@ -18,6 +17,7 @@ var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 const api = require('./routes/api/index');
 
+// TODO: This block may be removed at some point. Looking at credentials and configuration setting options.
 //var options = require('./options')
 /*
 var loginData = {
@@ -26,6 +26,7 @@ var loginData = {
         password: options.storageConfig.password
 };
 */
+
 var app = express();
 
 // See Promises in JavaScript: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
@@ -34,8 +35,8 @@ mongoose.Promise = global.Promise;
 // Add a connection to the database using mongoose
 // TODO: Update connection string to get read in from .gitIgnored config file (See: https://github.com/motdotla/dotenv)
 
-// TODO: Change this back after check-in - testing next
-mongoose.connect('dbUser:dbPass@dbhost.mongodb.net/appointments', {
+// Replace this after committing to source control.
+mongoose.connect('mongodb+srv://dbUser:dbPass@dbURL/database', {
   useMongoClient: true
 });
 
@@ -91,9 +92,9 @@ module.exports = app;
 
 // Notes
 
-/* Models:
+/* 
+ * Models:
  * To access the MongoDB database using mongoose, we need to define schemas and models. schemas and models convey to mongoose a simplified representation of the data structure comprising of fields and data types.
-*/
 
 /* Routes:
  * Express makes use of routes to handle request and responses from the client app (appointment scheduler in this case) and MongoDB.
@@ -102,4 +103,7 @@ module.exports = app;
  * Controllers are actually callback functions. Moving forward appointmentController.all, slotController.all and appointmentController.create are callback functions which we are referring to as controllers.
 
 /* Promise enables asynchronous method calls (DB calls, here) similar to Tasks in .Net so our application can keep working without waiting on a single method call. See Promises in JavaScript: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
- */
+
+/* Configure your credentials, connections, settings to be stored properly in external uncommitted file. See: https://github.com/motdotla/dotenv
+ * 
+*/
