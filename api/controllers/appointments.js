@@ -5,6 +5,9 @@ const {Appointment, Slot} = Model;
 
 const Nexmo = require("nexmo");
 
+// Loads configuration settings for environment
+const config = require('dotenv').config();
+
 const appointmentController = {
   all(req, res) {
     // Returns all appointments
@@ -27,15 +30,10 @@ const appointmentController = {
       slots: newslot._id
     });
 
-    // TODO: Read this in from .gitIgnored config file
-    // Replace here after committing to source control.
-
-    /*
     const nexmo = new Nexmo({
-      apiKey: "YOUR_API_KEY",
-      apiSecret: "YOUR_API_SECRET"
+      apiKey: process.env.SMS_KEY,
+      apiSecret: process.env.SMS_SECRET
     });
-    */
     
     // TODO: Original msg value. Safe to remove at some point.
     /*
@@ -54,16 +52,9 @@ const appointmentController = {
       Appointment.find({ _id: saved._id })
         .populate("slots")
         .exec((err, appointment) => res.json(appointment));
-
-      /*
-      // Update these with the vonage / nexmo number and your whitelisted recipient number.
-      const from = VIRTUAL_NUMBER;
-      const to = RECIPIENT_NUMBER;
-      */
       
-      // TODO: Read this in from .gitIgnored config file
-      // Replace here after committing to source control.
-
+      const from = process.env.SMS_FROM;
+      const to = process.env.SMS_TO;
 
       // TODO: Updated msg value, for now. Pretty this up / finalize at some point.
       let msg = 
@@ -76,7 +67,7 @@ const appointmentController = {
       "at " +
       requestBody.slot_time
       
-      // TODO: Activate this for reals when development is complete and app is live.
+      // TODO: Turn these alerts back on when application is live.
       // Uncomment this next block to hit the SMS api (works) and send text messages. Commenting out for now during development.
       /*
       nexmo.message.sendSms(from, to, msg, (err, responseData) => {
