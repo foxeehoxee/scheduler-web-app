@@ -17,15 +17,8 @@ var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 const api = require('./routes/api/index');
 
-// TODO: This block may be removed at some point. Looking at credentials and configuration setting options.
-//var options = require('./options')
-/*
-var loginData = {
-        host: options.storageConfig.HOST,
-        user: options.storageConfig.user,
-        password: options.storageConfig.password
-};
-*/
+// Loads configuration settings for environment
+const config = require('dotenv').config;
 
 var app = express();
 
@@ -33,10 +26,7 @@ var app = express();
 mongoose.Promise = global.Promise;
 
 // Add a connection to the database using mongoose
-// TODO: Update connection string to get read in from .gitIgnored config file (See: https://github.com/motdotla/dotenv)
-
-// Replace this after committing to source control.
-mongoose.connect('mongodb+srv://dbUser:dbPass@dbURL/database', {
+mongoose.connect(process.env.DB_CONNECTION_STRING, {
   useMongoClient: true
 });
 
