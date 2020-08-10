@@ -40,12 +40,14 @@ class AppointmentApp extends Component {
       stepIndex: 0
     };
   }
+
   componentWillMount() {
     axios.get(API_BASE + `api/retrieveSlots`).then(response => {
       console.log("response via db: ", response.data);
       this.handleDBReponse(response.data);
     });
   }
+  
   handleSetAppointmentDate(date) {
     this.setState({ appointmentDate: date, confirmationTextVisible: true });
   }
@@ -119,7 +121,7 @@ class AppointmentApp extends Component {
     );
   }
   
-  // TODO: Step through this block (below) and fix no-unused-expressions compilation errors. Remove when complete.
+  // Original handleDBReponse() function from tutorial
   /*
   handleDBReponse(response) {
     const appointments = response;
@@ -155,10 +157,47 @@ class AppointmentApp extends Component {
   }
   */
   
-  // TODO: This will be your new handleDBResponse() function.
+  // TODO: Revisit this function handleDBResponse() as you get more practice with React and this development stack, and application takes shape more. Continue refactoring as you improve API, user interface, and database to meet application goals. Good practice  anyway to brush up on ternary conditionals, anonymous / arrow functions, and syntax.
+  
+  /* This modified instance of handleDBResponse() resolves compilation errors, and
+   * renders appointment times that have already been reserved unselectable...
+   * However, issues do still exist with state, validation, and application flow.
+   * Continue modifying accordingly as you build out application more. For now,
+   * this does at least mark a complete working demo application using this new
+   * stack so you can continue on more in-depth from here.
+  */
+  
   handleDBReponse(response) {
     const appointments = response;
-    
+    const today = moment().startOf("day"); //start of today 12 am
+    const initialSchedule = {};
+    initialSchedule[today.format("YYYY-DD-MM")] = true;
+    const schedule = !appointments.length
+      ? initialSchedule
+      : appointments.reduce((currentSchedule, appointment) => {
+          const { slot_date, slot_time } = appointment;
+          const dateString = moment(slot_date, "YYYY-DD-MM").format(
+            "YYYY-DD-MM"
+          );
+          let x = !currentSchedule[slot_date]
+            ? (currentSchedule[dateString] = Array(8).fill(false))
+            : null;
+          x = Array.isArray(currentSchedule[dateString])
+            ? (currentSchedule[dateString][slot_time] = true)
+            : null;
+          return currentSchedule;
+        }, initialSchedule);
+
+    for (let day in schedule) {
+      let slots = schedule[day];
+      let y = slots.length
+        ? slots.every(slot => slot === true) ? (schedule[day] = true) : null
+        : null;
+    }
+
+    this.setState({
+      schedule: schedule
+    });
   }
   
   renderAppointmentConfirmation() {
@@ -196,6 +235,7 @@ class AppointmentApp extends Component {
       </section>
     );
   }
+  
   renderAppointmentTimes() {
     if (!this.state.isLoading) {
       const slots = [...Array(8).keys()];
@@ -263,8 +303,6 @@ class AppointmentApp extends Component {
       </div>
     );
   }
-
-
 
   render() {
     const {
@@ -468,4 +506,5 @@ class AppointmentApp extends Component {
     );
   }
 }
+
 export default AppointmentApp;
